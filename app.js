@@ -1,13 +1,3 @@
-/* PLAN
-
-DONE Snake movement should increase when snake eats 10 of the foods
-  (check snake length: 14, 24, 34, etc...)
-DONE The food should not appear on the snake
-DONE If snake runs into his body game is over
-DONE If snake hits a wall game is over
-
-*/
-
 const canvas = document.querySelector("canvas"),
   ctx = canvas.getContext("2d")
 
@@ -102,59 +92,48 @@ function update(delta) {
   if (head.x === food.x && head.y === food.y) {
     snake.length++
     score += 10
-
     generateFood()
   }
 
   if (score >= 1000) {
     moveInterval = 200
     speed = "2.00"
-
   }
   else if (score >= 900) {
     moveInterval = 220
     speed = "1.82"
-
   }
   else if (score >= 800) {
     moveInterval = 240
     speed = "1.67"
-
   }
   else if (score >= 700) {
     moveInterval = 260
     speed = "1.54"
-
   }
   else if (score >= 600) {
     moveInterval = 280
     speed = "1.43"
-
   }
   else if (score >= 500) {
     moveInterval = 300
     speed = "1.33"
-
   }
   else if (score >= 400) {
     moveInterval = 320
     speed = "1.25"
-
   }
   else if (score >= 300) {
     moveInterval = 340
     speed = "1.18"
-
   }
   else if (score >= 200) {
     moveInterval = 360
     speed = "1.11"
-
   }
   else if (score >= 100) {
     moveInterval = 380
     speed = "1.05"
-
   }
 
   const worldEdgeIntersect = head.x < 0 || head.y < 0 || head.x >= WORLD_WIDTH || head.y >= WORLD_HEIGHT
