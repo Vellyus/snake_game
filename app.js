@@ -1,3 +1,5 @@
+import TouchSweep from "./touchsweep.js"
+
 const canvas = document.querySelector("canvas"),
   ctx = canvas.getContext("2d")
 
@@ -17,10 +19,12 @@ let input,
   food,
   gameOver,
   score,
-  moveInterval
+  moveInterval,
+  speed
 
 
-function reset() {
+function reset()
+{
   input = {}
   snake = {
     moveElapsed: 0,
@@ -39,12 +43,14 @@ function reset() {
   score = 0
 }
 
-function generateFood() {
+function generateFood()
+{
   let newFood = {
     x: Math.floor(Math.random() * WORLD_WIDTH),
     y: Math.floor(Math.random() * WORLD_HEIGHT)
   }
-  while (snake.parts.some((part, index) => index !== 0 && newFood.x === part.x && newFood.y === part.y)) {
+  while (snake.parts.some((part, index) => index !== 0 && newFood.x === part.x && newFood.y === part.y))
+  {
     newFood = {
       x: Math.floor(Math.random() * WORLD_WIDTH),
       y: Math.floor(Math.random() * WORLD_HEIGHT)
@@ -53,27 +59,34 @@ function generateFood() {
   food = newFood
 }
 
-function update(delta) {
-  if (gameOver) {
+function update(delta)
+{
+  if (gameOver)
+  {
     if (input[" "]) reset()
     return
   }
 
-  if (input.ArrowLeft && snake.dir.x !== 1) {
+  if (input.ArrowLeft && snake.dir.x !== 1)
+  {
     snake.newDir = { x: -1, y: 0 }
   }
-  else if (input.ArrowUp && snake.dir.y !== 1) {
+  else if (input.ArrowUp && snake.dir.y !== 1)
+  {
     snake.newDir = { x: 0, y: -1 }
   }
-  else if (input.ArrowRight && snake.dir.x !== -1) {
+  else if (input.ArrowRight && snake.dir.x !== -1)
+  {
     snake.newDir = { x: 1, y: 0 }
   }
-  else if (input.ArrowDown && snake.dir.y !== -1) {
+  else if (input.ArrowDown && snake.dir.y !== -1)
+  {
     snake.newDir = { x: 0, y: 1 }
   }
 
   snake.moveElapsed += delta
-  if (snake.moveElapsed > moveInterval) {
+  if (snake.moveElapsed > moveInterval)
+  {
     snake.dir = snake.newDir
     snake.moveElapsed -= moveInterval
     const newSnakePart = {
@@ -82,56 +95,68 @@ function update(delta) {
     }
     snake.parts.unshift(newSnakePart)
 
-    if (snake.parts.length > snake.length) {
+    if (snake.parts.length > snake.length)
+    {
       snake.parts.pop()
     }
   }
 
   const head = snake.parts[0]
 
-  if (head.x === food.x && head.y === food.y) {
+  if (head.x === food.x && head.y === food.y)
+  {
     snake.length++
     score += 10
     generateFood()
   }
 
-  if (score >= 1000) {
+  if (score >= 1000)
+  {
     moveInterval = 200
     speed = "2.00"
   }
-  else if (score >= 900) {
+  else if (score >= 900)
+  {
     moveInterval = 220
     speed = "1.82"
   }
-  else if (score >= 800) {
+  else if (score >= 800)
+  {
     moveInterval = 240
     speed = "1.67"
   }
-  else if (score >= 700) {
+  else if (score >= 700)
+  {
     moveInterval = 260
     speed = "1.54"
   }
-  else if (score >= 600) {
+  else if (score >= 600)
+  {
     moveInterval = 280
     speed = "1.43"
   }
-  else if (score >= 500) {
+  else if (score >= 500)
+  {
     moveInterval = 300
     speed = "1.33"
   }
-  else if (score >= 400) {
+  else if (score >= 400)
+  {
     moveInterval = 320
     speed = "1.25"
   }
-  else if (score >= 300) {
+  else if (score >= 300)
+  {
     moveInterval = 340
     speed = "1.18"
   }
-  else if (score >= 200) {
+  else if (score >= 200)
+  {
     moveInterval = 360
     speed = "1.11"
   }
-  else if (score >= 100) {
+  else if (score >= 100)
+  {
     moveInterval = 380
     speed = "1.05"
   }
@@ -140,20 +165,23 @@ function update(delta) {
 
   const snakePartIntersect = snake.parts.some((part, index) => index !== 0 && head.x === part.x && head.y === part.y)
 
-  if (worldEdgeIntersect || snakePartIntersect) {
+  if (worldEdgeIntersect || snakePartIntersect)
+  {
     gameOver = true
   }
 
 }
 
-function render() {
+function render()
+{
   ctx.textAlign = "center"
   ctx.textBaseline = "middle"
 
   ctx.clearRect(0, 0, canvas.width, canvas.height)
 
   ctx.fillStyle = "black"
-  snake.parts.forEach(({ x, y }, index) => {
+  snake.parts.forEach(({ x, y }, index) =>
+  {
     if (index === 0) ctx.fillStyle = "black"
     else ctx.fillStyle = "#3d3d3d"
     ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
@@ -170,19 +198,21 @@ function render() {
   ctx.font = "20px Arial"
   ctx.fillText(`Speed: x${speed}`, canvas.width - 70, CELL_SIZE / 2)
 
-  if (gameOver) {
+  if (gameOver)
+  {
     ctx.fillStyle = "red"
     ctx.font = "60px Arial"
     ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2)
     ctx.font = "20px Arial"
-    ctx.fillText("Press SPACE to start over!", canvas.width / 2, canvas.height / 2 + 40)
+    ctx.fillText("Press SPACE or TAP on phone to start over!", canvas.width / 2, canvas.height / 2 + 40)
 
   }
 }
 
 let lastLoopTime = Date.now()
 
-function gameLoop() {
+function gameLoop()
+{
   const now = Date.now()
   const delta = now - lastLoopTime
   lastLoopTime = now
@@ -196,10 +226,58 @@ function gameLoop() {
 reset()
 gameLoop()
 
-window.addEventListener('keydown', (event) => {
+window.addEventListener('keydown', (event) =>
+{
   input[event.key] = true
 })
 
-window.addEventListener('keyup', (event) => {
+window.addEventListener('keyup', (event) =>
+{
   input[event.key] = false
 })
+
+
+const el = canvas
+let data = 1
+const threshold = 150
+
+new TouchSweep(el, data, threshold);
+
+el.addEventListener('swipeleft', event =>
+{
+  // event.detail
+  console.log("Swiped Left")
+  if (snake.dir.x !== 1) snake.newDir = { x: -1, y: 0 }
+
+});
+
+el.addEventListener('swiperight', event =>
+{
+  // event.detail
+  console.log("Swiped Right")
+  if (snake.dir.x !== -1) snake.newDir = { x: 1, y: 0 }
+
+});
+
+el.addEventListener('swipedown', event =>
+{
+  // event.detail
+  console.log("Swiped Down")
+  if (snake.dir.y !== -1) snake.newDir = { x: 0, y: 1 }
+
+});
+
+el.addEventListener('swipeup', event =>
+{
+  // event.detail
+  console.log("Swiped Up")
+  if (snake.dir.y !== 1) snake.newDir = { x: 0, y: -1 }
+});
+
+el.addEventListener('tap', event =>
+{
+  // event.detail
+  console.log("Tapped")
+  if (gameOver) reset()
+
+});
