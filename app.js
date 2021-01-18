@@ -239,7 +239,7 @@ window.addEventListener('keyup', (event) =>
 
 const el = canvas
 let data = 1
-const threshold = 150
+const threshold = 50
 
 new TouchSweep(el, data, threshold);
 
